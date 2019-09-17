@@ -133,7 +133,6 @@ def html_to_png(html):
         options.add_argument("--allow-http-screen-capture")
         options.add_argument('--force-device-scale-factor=1')
 
-        # TODO: how can the we find `chromedriver` on Heroku?
         driver = webdriver.Chrome(
             chrome_options=options,
             desired_capabilities=caps,
