@@ -14,10 +14,10 @@
   "image": "heroku/python",
   "buildpacks": [
     {
-      "url": "heroku/heroku-buildpack-google-chrome"
+      "url": "heroku/google-chrome"
     },
     {
-      "url": "heroku/heroku-buildpack-chromedriver"
+      "url": "heroku/chromedriver"
     }
   ],
   "env": {
