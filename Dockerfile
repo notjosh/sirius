@@ -21,6 +21,7 @@ RUN apt-get update -y && \
   libpq-dev \
   zlib1g-dev \
   fontconfig \
+  fonts-dejavu \
   gcc \
   google-chrome-stable \
   postgresql-11 \
