@@ -3,8 +3,14 @@ FROM python:3.7.4-slim-buster
 WORKDIR /sirius
 
 RUN apt-get update -y && \
-  mkdir -p /usr/share/man/man1 && \
-  mkdir -p /usr/share/man/man7 && \
+  apt-get install -y --no-install-recommends \
+  curl \
+  gnupg
+
+RUN curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add \
+  && echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list
+
+RUN apt-get update -y && \
   apt-get install -y --no-install-recommends \
   python3 \
   python3-dev \
@@ -14,20 +20,24 @@ RUN apt-get update -y && \
   libjpeg-dev \
   libpq-dev \
   zlib1g-dev \
-  bzip2 \
   fontconfig \
   gcc \
-  phantomjs \
-  wget \
+  google-chrome-stable \
   postgresql-11 \
-   git
+  unzip \
+  git && \
+  apt-get autoremove -y
 
-RUN apt-get autoremove -y
-
-RUN wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2
-RUN tar jxf phantomjs-2.1.1-linux-x86_64.tar.bz2 && \
-  rm phantomjs-2.1.1-linux-x86_64.tar.bz2 && \
-  mv phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/local/bin/phantomjs
+# Find the latest version for `chromedriver` that matches our installed `google-chrome` & install it to be available on $PATH
+RUN COMMON_VERSION=$(google-chrome --version | sed -nre "s/.* ([0-9]+\.[0-9]+\.[0-9]+)/\1/p" | cut -d"." -f1-3) && \
+  URL="https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${COMMON_VERSION}" && \
+  CHROMEDRIVER_VERSION=$(curl -Ss "${URL}") && \
+  CHROMEDRIVER_URL="https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip" && \
+  curl "${CHROMEDRIVER_URL}" -o "${HOME}/chromedriver_linux64.zip" && \
+  unzip "${HOME}/chromedriver_linux64.zip" -d "${HOME}/" && \
+  rm "${HOME}/chromedriver_linux64.zip" && \
+  mv -f "${HOME}/chromedriver" /usr/local/bin/chromedriver && \
+  chmod 0755 /usr/local/bin/chromedriver
 
 RUN pip install --upgrade pip
 
