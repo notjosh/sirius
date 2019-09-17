@@ -110,10 +110,36 @@ def html_to_png(html):
     driver = None
     try:
         caps = {'acceptSslCerts': True}
-        driver = webdriver.PhantomJS(
-            'phantomjs', desired_capabilities=caps,
-            service_args=['--ignore-ssl-errors=true', '--ssl-protocol=any'])
-        driver.set_window_size(384, 5)
+        options = webdriver.ChromeOptions()
+        options.accept_untrusted_certs = True
+        options.assume_untrusted_cert_issuer = True
+
+        options.set_headless()
+
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-impl-side-painting")
+        options.add_argument("--disable-setuid-sandbox")
+        options.add_argument("--disable-seccomp-filter-sandbox")
+        options.add_argument("--disable-breakpad")
+        options.add_argument("--disable-client-side-phishing-detection")
+        options.add_argument("--disable-cast")
+        options.add_argument("--disable-cast-streaming-hw-encoding")
+        options.add_argument("--disable-cloud-import")
+        options.add_argument("--disable-gpu")
+        options.add_argument("--disable-popup-blocking")
+        options.add_argument("--ignore-certificate-errors")
+        options.add_argument("--disable-session-crashed-bubble")
+        options.add_argument("--disable-ipv6")
+        options.add_argument("--allow-http-screen-capture")
+        options.add_argument('--force-device-scale-factor=1')
+
+        # TODO: how can the we find `chromedriver` on Heroku?
+        driver = webdriver.Chrome(
+            chrome_options=options,
+            desired_capabilities=caps,
+            service_args=['--ignore-ssl-errors=true', '--ssl-protocol=any']
+        )
+        driver.set_window_size(384, 8)
 
         # note that the .html suffix is required to make phantomjs
         # pick up the mime-type and render correctly.
@@ -124,7 +150,15 @@ def html_to_png(html):
                 f.write(html)
             f.flush()
             driver.get('file://' + f.name)
-            data = io.BytesIO(driver.get_screenshot_as_png())
+
+            total_height = driver.execute_script("return document.body.parentNode.scrollHeight")
+            driver.set_window_size(384, total_height)
+            screenshot = driver.get_screenshot_as_png()
+
+            # body = driver.find_element_by_tag_name('body')
+            # screenshot = body.screenshot_as_png
+
+            data = io.BytesIO(screenshot)
 
         return data
     finally:
