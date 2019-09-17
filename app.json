@@ -1,0 +1,37 @@
+{
+  "name": "Sirius",
+  "description": "Sirius is a Little Printer server, give or take.",
+  "website": "https://littleprinter.nordprojects.co/",
+  "repository": "https://github.com/nordprojects/sirius",
+  "addons": [
+    {
+      "plan": "heroku-postgresql",
+      "options": {
+        "version": "11.5"
+      }
+    }
+  ],
+  "image": "heroku/python",
+  "buildpacks": [
+    {
+      "url": "heroku/heroku-buildpack-google-chrome"
+    },
+    {
+      "url": "heroku/heroku-buildpack-chromedriver"
+    }
+  ],
+  "env": {
+    "FLASK_CONFIG": {
+      "description": "Deployment configuration",
+      "value": "heroku"
+    },
+    "TWITTER_CONSUMER_KEY": {
+      "description": "Twitter app consumer key",
+      "required": true
+    },
+    "TWITTER_CONSUMER_SECRET": {
+      "description": "Twitter app consumer secret",
+      "required": true
+    }
+  }
+}
