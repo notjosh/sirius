@@ -22,6 +22,7 @@ RUN apt-get update -y && \
   zlib1g-dev \
   fontconfig \
   fonts-dejavu \
+  fonts-noto-color-emoji \
   gcc \
   google-chrome-stable \
   postgresql-11 \
