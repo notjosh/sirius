@@ -1,40 +1,42 @@
-{% extends "base.html" %}
-
-{% block title %}Home | Little Printer{% endblock %}
-
+{% extends "base.html" %} {% block title %}Home | Little Printer{% endblock %}
 {% block page_content %}
 <div class="row">
-	<div class="col-md-8">
+  <div class="col-md-12">
+    <h1>My Printers</h1>
 
-		<h1>My Printers</h1>
-		
-		{% if not my_printers %}
-		<p><em class="bg-warning">None available</em></p>
-		{% endif %}
-		
-		<ul>
-			{% for p in my_printers %}
-			<li>
-				{% if p.is_online %}
-					<span class="label label-success">Online</span>
-				{% else %}
-					<span class="label label-default">Offline</span>
-				{% endif %}
-				<a class="btn btn-link" href="{{
+    {% if not my_printers %}
+    <p><em class="bg-warning">None available</em></p>
+    {% endif %}
+
+    <ul>
+      {% for p in my_printers %}
+      <li>
+        {% if p.is_online %}
+        <span class="badge badge-success">Online</span>
+        {% else %}
+        <span class="badge badge-secondary">Offline</span>
+        {% endif %}
+        <a
+          class="btn btn-link"
+          href="{{
 								url_for('printer_overview.printer_overview',
-										printer_id=p.id) }}">{{ p.name }}</a>
-			</li>
-			{% endfor %}
-		</ul>
+										printer_id=p.id) }}"
+          >{{ p.name }}</a
+        >
+      </li>
+      {% endfor %}
+    </ul>
 
-		<p>
-		<a class="btn btn-default" href="{{ url_for('landing.claim',
+    <p>
+      <a
+        class="btn btn-primary"
+        href="{{ url_for('landing.claim',
 										user_id=current_user.id,
-										username=current_user.username) }}">
-			Claim a printer
-		</a>
-		</p>
-		
-	</div>
+										username=current_user.username) }}"
+      >
+        Claim a printer
+      </a>
+    </p>
+  </div>
 </div>
 {% endblock %}

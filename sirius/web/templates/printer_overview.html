@@ -1,141 +1,156 @@
-{% extends "base.html" %}
-
-{% block title %}{{ printer.name }} | Little Printer{% endblock %}
-
-{% block page_content %}
+{% extends "base.html" %} {% block title %}{{ printer.name }} | Little Printer{%
+endblock %} {% block page_content %}
 <div class="row">
-	<div class="col-md-8">
+  <div class="col-md-12">
+    <h1>
+      {{ printer.name }}
+    </h1>
 
-		<h1>
-			{{ printer.name }}
-		</h1>
+    <p>
+      {% if printer.is_online %}
+      <span class="badge badge-success">Online</span>
+      {% else %}
+      <span class="badge badge-secondary">Offline</span>
+      {% endif %}
+    </p>
 
-		<p>
-			{% if printer.is_online %}
-				<span class="label label-success">Online</span>
-			{% else %}
-				<span class="label label-default">Offline</span>
-			{% endif %}
-		</p>
+    <p>
+      <a
+        class="btn btn-primary"
+        href="{{ url_for('printer_print.printer_print', printer_id=printer.id) }}"
+        >Send test message</a
+      >
+    </p>
 
-		<p>
-			<a class="btn btn-default" href="{{
-							url_for('printer_print.printer_print',
-									printer_id=printer.id) }}">Send test message</a>
-		</p>
+    <div class="spacer" style="height: 1em"></div>
 
-		<div class="spacer" style="height: 1em"></div>
+    {% if current_user.id == printer.owner.id %}
+    <h2>🔑 Print Keys</h2>
 
-		{% if current_user.id == printer.owner.id %}
-		<h2>🔑 Print Keys</h2>
+    <p>
+      Print Keys let you print using the
+      <a
+        href="https://itunes.apple.com/us/app/little-printers/id1393105914?ls=1&mt=8"
+        >Little Printers</a
+      >
+      app, or using our simple API.
+    </p>
 
-		<p>
-			Print Keys let you print using the <a href="https://itunes.apple.com/us/app/little-printers/id1393105914?ls=1&mt=8">Little Printers</a> app, or using our
-			simple API.
-		</p>
-		
-		{% if printer.print_keys.count() > 0 %}
-		<table class="table print-keys-table">
-			<thead>
-				<tr>
-					<th>Key</th>
-					<th>Creation date</th>
-					<th>Uses</th>
-					<th>Senders</th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for print_key in printer.print_keys %}
-				<tr>
-					<td>
-						<a href="{{ print_key.url }}">
-							{{ print_key.url }}
-						</a>
-					</td>
-					<td>{{ print_key.created.strftime('%H:%M %d/%m/%Y') }}</td>
-					<td>{{ print_key.number_of_uses }}</td>
-					<td>{{ print_key.senders_formatted() }}</td>
-					<td>
-						<button class="btn btn-link print-key-delete">
-							<span class="glyphicon glyphicon-remove"></span>
-						</button>
-						<form id="delete_form_{{ print_key.id }}"
-						      class="delete-form"
-						      method="POST"
-						      style="display: inline;
+    {% if printer.print_keys.count() > 0 %}
+    <table class="table print-keys-table">
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Creation date</th>
+          <th>Uses</th>
+          <th>Senders</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for print_key in printer.print_keys %}
+        <tr>
+          <td>
+            <a href="{{ print_key.url }}">
+              {{ print_key.url }}
+            </a>
+          </td>
+          <td>{{ print_key.created.strftime('%H:%M %d/%m/%Y') }}</td>
+          <td>{{ print_key.number_of_uses }}</td>
+          <td>{{ print_key.senders_formatted() }}</td>
+          <td>
+            <button class="btn btn-link print-key-delete">
+              <span class="oi oi-trash" title="delete"></span>
+            </button>
+            <form
+              id="delete_form_{{ print_key.id }}"
+              class="delete-form"
+              method="POST"
+              style="display: inline;
 						             visibility: hidden"
-						      action="{{ url_for('printer_overview.print_key_delete',
-						                         printer_id=printer.id,
-						                         print_key_id=print_key.id) }}">
-							Are you sure?
-							<button class="btn btn-link text-danger" 
-							        style="vertical-align: baseline;"
-							        type="submit">
-								Delete
-							</button>
-						</form>
-					</td>
-				</tr>
-				{% endfor %}
-			</tbody>
-		</table>
-		<style>
-			.table.print-keys-table>tbody>tr>td {
-				vertical-align: middle;
-			}
-		</style>
-		{% endif %}
+              action="{{ url_for('printer_overview.print_key_delete', printer_id=printer.id, print_key_id=print_key.id) }}"
+            >
+              Are you sure?
+              <button
+                class="btn btn-link text-danger"
+                style="vertical-align: baseline;"
+                type="submit"
+              >
+                Delete
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <style>
+      .table.print-keys-table > tbody > tr > td {
+        vertical-align: middle;
+      }
+    </style>
+    {% endif %}
 
-		<form method="POST" action="{{ url_for('printer_overview.print_key_add',
-		                                       printer_id=printer.id) }}">
-			<button class="btn btn-default" type="submit">
-				<span class="glyphicon glyphicon-plus"></span> Cut a new Print Key
-			</button>
-		</form>
+    <form
+      method="POST"
+      action="{{ url_for('printer_overview.print_key_add', printer_id=printer.id) }}"
+    >
+      <button class="btn btn-primary" type="submit">
+        <span class="oi oi-plus" title="plus" aria-hidden="true"></span> Cut a
+        new Print Key
+      </button>
+    </form>
 
-		<div class="spacer" style="height: 1em"></div>
+    <div class="spacer" style="height: 1em"></div>
 
-		<h2>Recent messages</h2>
+    <h2>Recent messages</h2>
 
-		{% for m in messages %}
-		<div class="thumbnail" style="width: 300px;">
-			<img src="data:image/png;base64,{{ m.base64_pixels().decode('utf-8') }}" style="border: 1px solid #ccc; width: 100%;">
-			<div class="caption">
-				<p>
-					{% if m.response_timestamp == None %}
-					<span class="bg-info">(still sending)</span>
-					{% else %}
-					Sent {{ m.response_timestamp.strftime('%H:%M, %d/%m/%Y') }}
-					{% endif %}
-					{% if m.failure_message %}
-					<br>
-					Message failed: <span class="bg-danger">{{ m.failure_message }}</span>
-					{% endif %}
-					<form method="POST" action="{{ url_for('printer_overview.reprint',
-		                                                   printer_id=printer.id,
-														   message_id=m.id) }}">
-						<button class="btn btn-link" type="submit" style="padding: 0;">
-							<span class="glyphicon glyphicon-repeat"></span> Reprint
-						</button>
-					</form>
-				</p>
-			</div>
-		</div>
-		{% endfor %}
-		
-		{% endif %}
-
-	</div>
+    {% for m in messages %}
+    <div class="card mb-3 p-1" style="width: 300px;">
+      <img
+        src="data:image/png;base64,{{ m.base64_pixels().decode('utf-8') }}"
+        class="card-img-top"
+        style="border: 1px solid #ccc; width: 100%;"
+      />
+      <div class="card-body p-2">
+        <p>
+          {% if m.response_timestamp == None %}
+          <span class="bg-info">(still sending)</span>
+          {% else %} Sent {{ m.response_timestamp.strftime('%H:%M, %d/%m/%Y') }}
+          {% endif %} {% if m.failure_message %}
+          <br />
+          Message failed: <span class="bg-danger">{{ m.failure_message }}</span>
+          {% endif %}
+        </p>
+        <form
+          method="POST"
+          action="{{ url_for('printer_overview.reprint', printer_id=printer.id, message_id=m.id) }}"
+        >
+          <p>
+            <button class="btn btn-link" type="submit" style="padding: 0;">
+              <span
+                class="oi oi-action-redo"
+                title="action redo"
+                aria-hidden="true"
+              ></span>
+              Reprint
+            </button>
+          </p>
+        </form>
+      </div>
+    </div>
+    {% endfor %} {% endif %}
+  </div>
 </div>
-{% endblock %}
-
-{% block scripts %}
+{% endblock %} {% block scripts %}
 {{ super() }}
 
 <script>
-	$(".print-key-delete").click(function () {
-		$(this).parent().find('.delete-form').css({visibility: 'visible'});
-	});
+  $('.print-key-delete').click(event => {
+    $(event.currentTarget)
+      .parent()
+      .find('.delete-form')
+      .css({ visibility: 'visible' });
+  });
 </script>
 {% endblock scripts %}

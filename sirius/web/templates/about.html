@@ -1,29 +1,56 @@
-{% extends "base.html" %}
-
-{% block title %}About | Little Printer{% endblock %}
-
+{% extends "base.html" %} {% block title %}About | Little Printer{% endblock %}
 {% block page_content %}
 
 <div class="row">
-	<div class="col-md-8">
-		<h1>About</h1>
-		
-		<p>This is an alternate Little Printer backend, maintained by <a href="http://nordprojects.co">Nord Projects</a>.</p>
-		<p>You can:</p>
-		<ul>
-			<li>Claim your printer</li>
-			<li>Send test messages</li>
-			<li>Use it with our <a href="https://itunes.apple.com/us/app/little-printers/id1393105914?ls=1&mt=8">Little Printers</a> app to send messages from your iPhone!</li>
-			<li>Send messages via our Print Key API</li>
-		</ul>
+  <div class="col-md-12">
+    <h1>About</h1>
 
-		<p>To use your Little Printer with this backend, you'll need to root your bridge, and install a software update. Check out <a href="http://joerick.me/posts/2017/03/09/little-printer/">information about the process</a> or check out a <a href="https://docs.google.com/document/d/1JT1f2ClVdAnjrnby92V9ONBnN05EFQGYpLG5ijl5KRI/edit?usp=sharing">step-by-step guide here</a>.</p>
+    <p>
+      This is an alternate Little Printer backend, maintained by
+      <a href="http://nordprojects.co">Nord Projects</a>.
+    </p>
+    <p>You can:</p>
+    <ul>
+      <li>Claim your printer</li>
+      <li>Send test messages</li>
+      <li>
+        Use it with our
+        <a
+          href="https://itunes.apple.com/us/app/little-printers/id1393105914?ls=1&mt=8"
+          >Little Printers</a
+        >
+        app to send messages from your iPhone!
+      </li>
+      <li>Send messages via our Print Key API</li>
+    </ul>
 
-		<p>All the code is open source, check it on <a href="https://github.com/nordprojects/sirius">GitHub</a>. This backend is forked from the <a href="http://github.com/genmon/sirius">sirius project</a>, and most of the code originated there. Thanks to Matt Webb, Tom Hunger, Quentin Dufour, who did the lion's share of the work to get this thing working!</p>
+    <p>
+      To use your Little Printer with this backend, you'll need to root your
+      bridge, and install a software update. Check out
+      <a href="http://joerick.me/posts/2017/03/09/little-printer/"
+        >information about the process</a
+      >
+      or check out a
+      <a
+        href="https://docs.google.com/document/d/1JT1f2ClVdAnjrnby92V9ONBnN05EFQGYpLG5ijl5KRI/edit?usp=sharing"
+        >step-by-step guide here</a
+      >.
+    </p>
 
-		<p>Finally, thanks to the good people of BERG, whose product captured our imaginations.</p>
-	</div>
+    <p>
+      All the code is open source, check it on
+      <a href="https://github.com/nordprojects/sirius">GitHub</a>. This backend
+      is forked from the
+      <a href="http://github.com/genmon/sirius">sirius project</a>, and most of
+      the code originated there. Thanks to Matt Webb, Tom Hunger, Quentin
+      Dufour, who did the lion's share of the work to get this thing working!
+    </p>
+
+    <p>
+      Finally, thanks to the good people of BERG, whose product captured our
+      imaginations.
+    </p>
+  </div>
 </div>
-
 
 {% endblock %}

@@ -1,49 +1,95 @@
-{% extends "bootstrap/base.html" %}
+{% block doc -%}
+<!DOCTYPE html>
+<html {% block html_attribs %}{% endblock html_attribs %}>
+  {%- block html %}
+  <head>
+    {%- block head %}
+    <title>{% block title %}Little Printer{% endblock title %}</title>
 
-{% block styles %}
-{{super()}}
-<link rel="stylesheet" href="{{url_for('static', filename='bootstrap-theme.min.css')}}">
-<link rel="stylesheet" href="{{url_for('static', filename='site.css')}}">
-{% endblock %}
+    {%- block metas %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {%- endblock metas %} {%- block styles %}
+    {{
+      bootstrap.load_css()
+    }}
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='site.css' )}}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='open-iconic/font/css/open-iconic-bootstrap.css' )}}"
+    />
+    {%- endblock styles %} {%- endblock head %}
+  </head>
 
-{% block title %}Little Printer{% endblock %}
+  <body {% block body_attribs %}{% endblock body_attribs %}>
+    {% block body -%} {% block navbar %}
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-inverse mb-3">
+      <div class="container">
+        <button
+          type="button"
+          class="navbar-toggler text-light"
+          data-toggle="collapse"
+          data-target="#navbar"
+          aria-expanded="false"
+          aria-controls="navbar"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div id="navbar" class="navbar-collapse collapse">
+          <a class="navbar-brand" href="{{ url_for('landing.landing') }}"
+            >nord-sirius</a
+          >
+          <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li
+              class="nav-item{% if request.url_rule.endpoint == 'landing.landing' %} active{% endif %}"
+            >
+              <a class="nav-link" href="{{ url_for('landing.landing') }}"
+                >Home</a
+              >
+            </li>
+            <li
+              class="nav-item{% if request.url_rule.endpoint == 'landing.about' %} active{% endif %}"
+            >
+              <a class="nav-link" href="{{ url_for('landing.about') }}"
+                >About</a
+              >
+            </li>
+          </ul>
+          {% if current_user.is_authenticated %}
+          <ul class="nav navbar-nav navbar-right">
+            <li class="nav-item">
+              <a class="nav-link" href="/login/twitter/logout">Sign out</a>
+            </li>
+          </ul>
+          {% endif %}
+        </div>
+        <!--/.nav-collapse -->
+      </div>
+    </nav>
+    {%- endblock navbar %} {% block content -%}
+    <div class="container" role="main">
+      {% for message in get_flashed_messages() %}
+      <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">
+          &times;
+        </button>
+        {{ message }}
+      </div>
+      {% endfor %} {% block page_content %}{% endblock %}
+    </div>
+    {%- endblock content %} {% block scripts %}
+    {{ bootstrap.load_js() }}
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
 
-{% block navbar %}
-<nav class="navbar navbar-inverse navbar-static-top">
-	<div class="container">
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-				<span class="sr-only">Toggle navigation</span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>
-			<a class="navbar-brand" href="{{ url_for('landing.landing') }}">nord-sirius</a>
-		</div>
-		<div id="navbar" class="navbar-collapse collapse">
-			<ul class="nav navbar-nav">
-				<li{% if request.url_rule.endpoint == "landing.landing" %} class="active"{% endif %}><a href="{{ url_for('landing.landing') }}">Home</a></li>
-				<li{% if request.url_rule.endpoint == "landing.about" %} class="active"{% endif %}><a href="{{ url_for('landing.about') }}">About</a></li>
-			</ul>
-			{% if current_user.is_authenticated %}
-			<ul class="nav navbar-nav navbar-right">
-				<li><a href="/login/twitter/logout">Sign out</a></li>
-			</ul>
-			{% endif %}
-		</div><!--/.nav-collapse -->
-	</div>
-</nav>
-{% endblock %}
-
-{% block content %}
-<div class="container" role="main">
-	{% for message in get_flashed_messages() %}
-	<div class="alert alert-warning">
-		<button type="button" class="close" data-dismiss="alert">&times;</button>
-		{{ message }}
-	</div>
-	{% endfor %}
-
-	{% block page_content %}{% endblock %}
-</div>
-{% endblock %}
+    <script>
+      $(document).ready(function() {
+        bsCustomFileInput.init();
+      });
+    </script>
+    {%- endblock scripts %} {%- endblock body %}
+  </body>
+  {%- endblock html %}
+</html>
+{% endblock doc -%}

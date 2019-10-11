@@ -25,11 +25,6 @@ class PrintForm(flask_wtf.FlaskForm):
         coerce=int,
         validators=[wtforms.validators.DataRequired()],
     )
-    face = wtforms.SelectField(
-        'Face',
-        coerce=str,
-        validators=[wtforms.validators.DataRequired()],
-    )
     message = wtforms.TextAreaField(
         'Message',
         validators=[wtforms.validators.DataRequired()],
@@ -65,12 +60,10 @@ def printer_print(printer_id):
         (x.id, x.name) for x in login.current_user.friends_printers()
     ]
     form.target_printer.choices = choices
-    form.face.choices = [("default", "Default face"), ("noface", "No face")]
 
     # Set default printer on get
     if flask.request.method != 'POST':
         form.target_printer.data = printer.id
-        form.face.data = "default"
 
     if form.validate_on_submit():
         try:
