@@ -6,8 +6,8 @@ import gevent
 import logging
 import flask
 import flask_sockets
+from flask_bootstrap import Bootstrap
 from flask_cors import CORS
-import flask_bootstrap as bootstrap
 
 from sirius.protocol import protocol_loop
 from sirius import stats
@@ -30,7 +30,6 @@ from sirius.web import print_key_api
 
 
 logger = logging.getLogger(__name__)
-bootstrap = bootstrap.Bootstrap()
 sockets = flask_sockets.Sockets()
 
 
@@ -43,7 +42,7 @@ def create_app(config_name):
     CORS(app, resources={r"/printkey/*": {"origins": "*"}})
 
     # Configure various plugins and logging
-    bootstrap.init_app(app)
+    bootstrap = Bootstrap(app)
     db.db.init_app(app)
     sockets.init_app(app)
     login.manager.init_app(app)
